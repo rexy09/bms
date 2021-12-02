@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+Stock List
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:inventory' id=business.id %}">Inventory</a></li>
+<li>Stock List</li>
+{% endblock%}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Current Stock List</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20 table-responsive">
+
+                    <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Product Cost</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Product Cost</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{product.name}}</td>
+                                <td>{{product.unit}}</td>
+                                <td>{{product.product_code}}</td>
+                                <td>
+                                    {% if product.average_cost.product_cost %}
+                                    {{product.average_cost.product_cost|floatformat:2}} {{product.currency}}
+                                    {% else %}
+                                    0 {{product.currency}}
+                                    {% endif %}
+                                </td>
+                                <td> 
+                                    {% if product.quantity <= product.min_quantity %}
+                                    <strong class="text-danger">{{product.quantity}}</strong>                                        
+                                    {% else %}
+                                    <strong class="text-success">{{product.quantity}}</strong>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    No Stock records
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Opening Stock List</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20 table-responsive">
+
+                    <table id="example2" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                                <th>Product Cost</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                                <th>Product Cost</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for stock in openings %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{stock.product}}</td>
+                                <td>{{stock.product.unit}}</td>
+                                <td>{{stock.product.product_code}}</td>
+                                <td>{{stock.quantity}}</td>
+                                <td>{{stock.cost|intcomma}} {{stock.product.currency}}</td>
+                                <td>{{stock.stock_type}}</td>
+                                <td>{{stock.stock_date}}</td>
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    No Opening Stock records
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Closing Stock List</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20 table-responsive">
+
+                    <table id="example3" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                                <th>Product Cost</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Product Unit</th>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                                <th>Product Cost</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for stock in closings %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{stock.product}}</td>
+                                <td>{{stock.product.unit}}</td>
+                                <td>{{stock.product.product_code}}</td>
+                                <td>{{stock.quantity}}</td>
+                                <td>{{stock.cost|intcomma}} {{stock.product.currency}}</td>
+                                <td>{{stock.stock_type}}</td>
+                                <td>{{stock.stock_date}}</td>
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    No Closing Stock records
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fab" id="masterfab" data-toggle="" data-target=""> <a href="{% url 'business:add_stock' id=business.id %}"><span>+</span></a></div>
+</div>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+
+<script>
+    $(function ($) {
+        $('#example').DataTable();
+    });
+
+    $(function ($) {
+        $('#example2').DataTable();
+    });
+
+    $(function ($) {
+        $('#example3').DataTable();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+Bank List
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'administration:administrator' %}">Administrator</a></li>
+<li>Bank List</li>
+{% endblock%}
+
+{% block content %}
+
+<style type="text/css">
+  .fab {
+    background: #4B9848;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    text-align: center;
+    color: #FFF;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5), 3px 3px 3px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2.6667em;
+    display: inline-block;
+    cursor: default;
+    padding-top: 8px;
+  }
+
+  .fab span {
+    vertical-align: text-bottom;
+    font-size: 45px;
+  }
+
+
+  #bank {
+    position: fixed;
+    bottom: 120px;
+    right: 20px;
+  }
+
+
+  #account {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+  }  
+  
+</style>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-8 col-md-offset-2">
+      <div class="panel">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <h5>Bank List</h5>
+          </div>
+        </div>
+        <div class="panel-body p-20 table-responsive">
+
+          <div class="card-body bg-white">
+            <div class="table-responsive">
+              <table class="table table-bordered" width="100%" cellspacing="0" id="example">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Bank</th>
+                    <th></th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>#</th>
+                    <th>Bank</th>
+                    <th></th>
+                    <th>Action</th>
+                  </tr>
+                </tfoot>
+                {% if banks %}
+                <tbody id="myTable">
+                  {% for bank in banks %}
+
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{bank.branch}}</td>
+
+                    <td>
+                    {% for bank_account in accounts %}
+
+                      {% if bank.branch == bank_account.bank.branch %}
+                      <table class="table table-bordered">
+                        <tr>
+                        <th>Account Name</th>
+                        <th>Account No</th>
+                      </tr>                      
+                      <tr>
+                        <td>{{bank_account.account_name}}</td>
+                        <td>{{bank_account.account_no}}</td>
+                      </tr> 
+                    </table>
+
+                     {% endif %}
+                    {% endfor %}
+
+                    </td>
+                    <td>
+                      <a href="{% url 'administration:bank-delete' id=bank.id %}"
+                        class="hvr-icon-push hvr-shrink" data-micron-timing="linear" data-micron="bounce"
+                        data-micron-duration=".">
+                        <button class="btn btn-danger btn-sm" data-micron-timing="linear" data-micron="bounce"
+                          data-micron-duration=".">
+                          <i class="fa fa-edit hvr-icon"></i>
+                          delete
+                        </button>
+                      </a>
+
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                  {% else %}
+                  <tr>
+                    <td colspan="6" class="text-center">0 banks</td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<button class="btn btn-success btn-rounded btn-wide pull-right" id="bank" data-toggle="modal"
+  data-target="#bankRegistrationModal"><i class="fa fa-check"></i>Register Bank Name</button> 
+
+<button class="btn btn-success btn-rounded btn-wide pull-right" id="account" data-toggle="modal"
+  data-target="#accountRegistrationModal"><i class="fa fa-check"></i>Register Bank Accounts</button>        
+
+      <!-- Modal -->
+      <div class="modal fade" id="bankRegistrationModal" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Add Bank Name</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <form class="" method="POST" action="">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="name2">Bank</label>
+                    <!-- <span class="fa fa-building form-left-icon"></span> -->
+                    {{bank_form.name|add_class:"form-control"|attr:"placeholder:Bank name"}}
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name2">Branch</label>
+                    <!-- <span class="fa fa-building form-left-icon"></span> -->
+                    {{bank_form.branch|add_class:"form-control"|attr:"placeholder:Branch"}}
+                  </div>
+
+                  <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i
+                      class="fa fa-check"></i>Submit</button>
+
+                </form>
+
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="accountRegistrationModal" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Add Bank Account</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <form class="" method="POST" action="{% url 'administration:bank-list' %}?account=1">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="name2">Bank</label>
+                    <!-- <span class="fa fa-building form-left-icon"></span> -->
+                    {{account_form.bank|add_class:"form-control"|attr:"placeholder:Bank"}}
+                  </div>
+                  <div class="form-group">
+                    <label for="name2">Account Name</label>
+                    <!-- <span class="fa fa-building form-left-icon"></span> -->
+                    {{account_form.account_name|add_class:"form-control"|attr:"placeholder:Account name"}}
+                  </div>
+                  <div class="form-group">
+                    <label for="name2">Account Number</label>
+                    <!-- <span class="fa fa-building form-left-icon"></span> -->
+                    {{account_form.account_no|add_class:"form-control"|attr:"placeholder:Account number"}}
+                  </div>                  
+
+                  <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i
+                      class="fa fa-check"></i>Submit</button>
+
+                </form>
+
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- bank Details Modal -->
+      <div class="modal fade" id="bankDetailslModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Bank Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div><strong>Name:</strong> <span id="name"></span></div>
+                <div id="type"></div>
+                <div id="cost"></div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End of bank details modal -->
+
+
+    </div>
+
+    <script>
+      $('#bankDetailslModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var name = button.data('name') // Extract info from data-* attributes
+        console.log(cost)
+        console.log(name)
+        console.log(type)
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('bank Details')
+        modal.find('.modal-body #name').text(name)
+        // modal.find('.modal-body #type').text(type)
+        // modal.find('.modal-body #cost').text(cost)
+      })
+    </script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js">
+    </script>
+
+
+    <script>
+      $(function ($) {
+        $('#example').DataTable();
+      });
+    </script>
+
+    {% endblock %}

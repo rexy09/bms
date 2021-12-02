@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Add Supplier
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'administration:administrator' %}">Administrator</a></li>
+<li><a href="{% url 'business:suppliers' %}">Supplier List</a></li>
+<li>Add Supplier</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Supplier Info.</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20">
+
+                    <form class="col-md-10 col-md-offset-1" method="POST" action=".">
+                        {% csrf_token %}
+                          <div class="form-group">
+                              <label for="name2">Select Business Branch</label>
+                              {{form.business|add_class:"form-control"|attr:"placeholder:Select business branch"}}
+                          </div>
+                        <div class="form-group">
+                            <label for="name2">Supplier name</label>
+                            {{form.name|add_class:"form-control"|attr:"placeholder:Supplier name"}}
+                        </div>
+                        <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i class="fa fa-check"></i>Submit</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+
+    </div>
+
+</div>
+
+{% endblock %}

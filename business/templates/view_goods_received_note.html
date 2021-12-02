@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+{% load django_template_maths %}
+
+{% block title %}
+Goods Received Note
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:goods_received_note' id=business.id %}">Goods Received Note List</a></li>
+<li>Goods Received Note</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Goods Received Note Info.</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20">
+                    <h5 class="m-10" style="float: right;"><strong>ORDER NUMBER:</strong> {{grn.order_no}}</h5>
+
+                    <h5 class="m-10"><strong>SUPPLIER:</strong> {{grn.supplier}}</h5>
+                    <h5 class="m-10"><strong>DELIVERY CENTER:</strong> {{grn.delivery}}</h5>
+                    <h5 class="m-10"><strong>DATE:</strong> {{grn.created_at.date}}</h5>
+
+             
+                    <h5 class="m-10"><strong>GRN LIST</strong></h5>
+                    <div class="table-responsive">
+                        <table id="example" class="display table table-striped table-bordered" cellspacing="0"
+                            width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Unit</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Unit</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for list in grn.grn_list.all %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{list.description}}</td>
+                                    <td>{{list.unit}}</td>
+                                    <td>{{list.quantity}}</td>
+                                    <td>{{list.price|intcomma}}</td>
+                                    <td>{{list.total|intcomma}}</td>
+                                   
+                                </tr>
+
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        No Goods Received Note records
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h5 style="float: right; margin: 0px;"><strong>Total:</strong> {{grn.total|intcomma}}/=</h5>
+                    </div>
+                   <br><br>                 
+                        
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+    </div>
+</div>
+
+{% endblock %}

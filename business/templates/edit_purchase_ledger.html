@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Purchase Ledger
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:inventory' id=business.id %}">Inventory</a></li>
+<li><a href="{% url 'business:purchase_ledger' id=business.id %}">Purchase Ledger List</a></li>
+<li>Edit Purchase Ledger</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Purchase Ledger Info.</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20">
+                    <form class="" method="POST" action=".">
+                        {% csrf_token %}
+                        <style>
+                            .supplier-disable {pointer-events: none;}
+                        </style>
+                        <div class="form-group">
+                            <label for="">SUPPLIER</label>
+                            {{ledger_form.supplier|add_class:"form-control supplier-disable"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="name2">INVOICE NUMBER</label>
+                            {{ledger_form.invoice_no|add_class:"form-control"|attr:"placeholder:INVOICE NUMBER"|attr:"readonly"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="">ORDER NUMBER</label>
+                            {{ledger_form.order_no|add_class:"form-control"|attr:"placeholder:ORDER NUMBER"|attr:"autocomplete:off"|attr:"readonly"}}
+                            {{ledger_form.order_no.errors}}
+                            <style>
+                                #id_order_no {
+                                    margin: 0px !important;
+                                }
+                                .ui-order-no {
+                                    position: relative;
+                                    z-index: 99;
+                                    background-color: rgb(255, 255, 255);
+                                    border-radius: 5px;
+                                    max-height: 100px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+                                    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.15);
+                                    
+                                }
+                            </style>
+                            <div id="order_no" class="ui-order-no">
+                            </div>
+                        </div>
+                      
+                        <div class="form-group">
+                            <label for="username2">DELIVERY CENTER</label>
+                            {{ledger_form.delivery|add_class:"form-control"|attr:"placeholder:DELIVERY CENTER"|attr:"readonly"}}
+                        </div> 
+                        <div class="form-group">
+                            <label for="username2">AMOUNT</label>
+                            {{ledger_form.amount|add_class:"form-control"|attr:"readonly"}}
+                        </div>       
+                        <div class="form-group">
+                            <label for="username2">STATUS</label>
+                            {{ledger_form.status|add_class:"form-control"}}
+                        </div>                             
+                        <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i class="fa fa-check"></i>Update</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+
+    </div>
+
+</div>
+
+
+
+<script>
+    $(function () {
+      $("#id_order_no").autocomplete({
+        source: function (request, response) {
+            console.log('Hello');
+          $.ajax({
+            url: "{% url 'business:autocomplete_order_no' id=business.id %}",
+            dataType: "json",
+            data: {
+              term: request.term,
+            },
+            success: function (data) {
+              response(data);
+              console.log(data);
+            }
+          });
+        },
+        minLength: 2,
+        appendTo: "#order_no",  
+        autoFocus: true,
+        classes: {
+            "ui-autocomplete": "highlight"
+          }    
+      });
+    });
+  </script>
+
+{% endblock %}

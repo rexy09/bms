@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Add Stock
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:inventory' id=business.id %}">Inventory</a></li>
+<li><a href="{% url 'business:stock_list' id=business.id %}">Stock List</a></li>
+<li>Add Stock</li>
+{% endblock%}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Stock Info.</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20">
+                    <form class="col-md-10 col-md-offset-1" method="POST" action=".">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username2">Stock Type</label>
+                            {{form.stock_type|add_class:"form-control"|attr:"placeholder:Type"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="username2">Select Product</label>
+                            {{form.product|add_class:"form-control"|attr:"placeholder:Product"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="name2">Stock Quantity</label>
+                            {{form.quantity|add_class:"form-control"|attr:"placeholder:Quantity"}}
+                        </div>
+                        <div class="form-group">
+
+                            <label for="username2">Stock Cost</label>
+                            {{form.cost|add_class:"form-control"|attr:"placeholder:Cost"}}
+                        </div>
+                      
+                        <div class="form-group">
+                            <label for="username2">Date</label>
+                            {{form.stock_date|add_class:"form-control"|attr:"placeholder:Date"|attr:"type:date"}}
+                        </div>
+                       
+                        <div class="form-group">
+                            {{form.amount_paid|add_class:"form-control"|attr:"placeholder:Customer Paid"|attr:"readonly"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="username2">Notes</label>
+                            {{form.note|add_class:"form-control"|attr:"placeholder:Notes"|attr:"rows:3"}}
+                        </div>
+                        <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i
+                                class="fa fa-check"></i>Submit</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+
+    </div>
+
+</div>
+
+<script>
+    var obj = {};
+
+    $("#id_product").change(function () {
+        $.ajax({
+            url: "{% url 'business:get_stock' %}",
+            dataType: "json",
+            data: {
+                product: $("#id_product").val(),
+                stock_type:$("#id_stock_type").val(),
+            },
+            success: function (data) {
+                var $data = JSON.parse(data);
+                obj = $data;
+                $('#id_quantity').val(obj['quantity']);
+
+        
+                $("#id_cost").val(obj['total_cost']);
+            }
+        });
+    });
+
+ 
+</script>
+
+{% endblock %}

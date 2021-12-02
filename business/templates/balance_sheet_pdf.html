@@ -1,0 +1,154 @@
+{% load humanize %}
+{% load static %}
+
+<head>
+    <style>
+        @page {
+            size: A4;
+            /* Change from the default size of A4 */
+            margin: 0.5cm;
+            /* Set margin on each page */
+            background-color: #f5f4f3;
+
+        }
+
+        header {
+            height: auto;
+            width: 100%;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-size: 12px;
+            font-family: 'Lucida Sans';
+            background-image: url("{% static 'img/potraits.png' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        table tr:nth-child(odd) {
+            background-color: whitesmoke;
+        }
+
+        table th {
+            background-color: #7ebb45;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th {
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        td {
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="{% static 'img/report-heading.png' %}" alt="">
+    </header>
+        <br><br>
+        <h1 style="color: #28a745;">Balance Sheet</h1>
+        <br>
+
+                    <table id="example" class="display table table-striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Particulars</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700;">Current Assets</td>
+                                <td></td>
+                            </tr>                           
+                            {% for asset in current_assets %}
+                            <tr>
+                                <td>{{asset.name}}</td>
+                                <td>{{asset.cost}}</td>
+                            </tr>                           
+                            {% endfor %}
+                            <tr>
+                                <td style="font-weight: 700;">Fixed Assets</td>
+                                <td></td>
+                            </tr>                           
+                            {% for asset in fixed_assets %}
+                            <tr>
+                                <td>{{asset.name}}</td>
+                                <td>{{asset.value}}</td>
+                            </tr>                           
+                            {% endfor %}
+                            <tr style="border-top: 2px solid black; border-bottom: 2px solid black;">
+                                <td style="font-weight: 700;">Total Assets</td>
+                                <td style="font-weight: 700;">{{assets_total}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700;">Liabilities</td>
+                                <td></td>
+                            </tr>                           
+                            {% for liability in liabilities %}
+                            <tr>
+                                <td>{{liability.name}}</td>
+                                <td>{{liability.cost}}</td>
+                            </tr>                           
+                            {% endfor %}
+                            <tr style="border-top: 2px solid black; border-bottom: 2px solid black;">
+                                <td style="font-weight: 700;">Total Liabilities</td>
+                                <td style="font-weight: 700;">{{liabilities_total}}</td>
+                            </tr>                                                                                                                
+                            <tr>
+                                <td style="font-weight: 700;">Equities</td>
+                                <td></td>
+                            </tr>                           
+                            {% for equity in equities %}
+                            <tr>
+                                <td>{{equity.name}}</td>
+                                <td>{{equity.value}}</td>
+                            </tr>                           
+                            {% endfor %}
+                            <tr style="border-top: 2px solid black; border-bottom: 2px solid black;">
+                                <td style="font-weight: 700;">Total Equities</td>
+                                <td style="font-weight: 700;">{{equity_total}}</td>
+                            </tr>
+                            <tr>
+                                <td style="">   </td>
+                                <td></td>
+                            </tr>                            
+                            <tr style="border-top: 2px solid black; border-bottom: 2px solid black;">
+                                <td style="font-weight: 700;">Liabilities plus Equity :  {{liability_equity}}</td>
+                                <td style="font-weight: 700;">Total Assets : {{assets_total}}</td>
+                            </tr>                                                               
+                        </tbody>
+
+                    </table>
+
+</body>

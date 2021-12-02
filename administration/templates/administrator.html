@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Administrator
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+
+    <div class="row mb-20">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-success" href="{% url 'administration:business-list' %}">
+                <span class="number counter"></span>
+                <span class="name">Business Branch Registration</span>
+                <span class="bg-icon"><i class="fa fa-globe" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>
+
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-info" href="{% url 'administration:department-list' %}">
+                <span class="number counter"></span>
+                <span class="name">Department Registration</span>
+                <span class="bg-icon"><i class="fa fa-cubes" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>
+        <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
+
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-primary" href="{% url 'administration:bank-list' %}">
+                <span class="number counter"></span>
+                <span class="name">Bank Accounts Registration</span>
+                <span class="bg-icon"><i class="fa fa-money" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>
+        <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-danger" href="{% url 'administration:users-list' %}">
+                <span class="number counter"></span>
+                <span class="name">User Registration</span>
+                <span class="bg-icon"><i class="fa fa-user" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>        
+
+
+    </div>
+
+    <div class="row">
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <a class="dashboard-stat bg-danger" href="{% url 'business:suppliers' %}">
+        <span class="number counter"></span>
+        <span class="name">Suppliers</span>
+        <span class="bg-icon"><i class="fa fa-truck" style="padding: 12px;"></i></span>
+    </a>
+</div>
+
+    </div>
+
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Edit Goods Received Note
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:inventory' id=business.id %}">Inventory</a></li>
+<li><a href="{% url 'business:goods_received_note' id=business.id %}">Goods Received Note List</a></>
+<li>Edit Goods Received Note</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Goods Received Note Info.</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20">
+                    <form class="" method="POST" action=".">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username2">ORDER NUMBER</label>
+                            {{grn_form.order_no|add_class:"form-control"|attr:"placeholder:ORDER NUMBER"|attr:"autocomplete:off"|attr:"readonly"}}
+                        </div>
+                        <style>
+                            .supplier-disable {
+                                pointer-events: none;
+                            }
+                        </style>
+                        <div class="form-group ">
+                            <label for="name2">SUPPLIER</label>
+                            {{grn_form.supplier|add_class:"form-control supplier-disable"}}
+                        </div>
+                        <div class="form-group">
+                            <label for="username2">DELIVERY CENTER</label>
+                            {{grn_form.delivery|add_class:"form-control"}}
+                        </div>
+
+                        <div class="form-group mt-40">
+                            <button type="button" class="btn btn-danger btn-rounded btn-wide pull-right ml-20"
+                                onclick="local_purchase_order_list_sum()"><i class="fa fa-plus"></i>Sum</button>
+                            <button type="button" class="btn btn-primary btn-rounded btn-wide pull-right"
+                                onclick="add_purchase_order_list()"><i class="fa fa-plus"></i>Add</button>
+                            <label style="font-weight: bold;" style="float: left;">GRN LIST</label>
+                        </div>
+
+                        <div class="row" id="purchase-order-list-form">
+                            {{ purchase_order_list_form.management_form }}
+                            {% for form in purchase_order_list_form %}
+                            {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            <div class="col-md-4">
+                                {{form.description|add_class:"form-control"|attr:"placeholder:Description"}}
+                            </div>
+                            <div class="col-md-1">
+                                {{form.unit|add_class:"form-control"|attr:"placeholder:Unit"}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form.quantity|add_class:"form-control"|attr:"placeholder:Quantity"}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form.price|add_class:"form-control"|attr:"placeholder:Price"}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form.total|add_class:"form-control"|attr:"placeholder:Total"}}
+                            </div>
+                            <div class="col-md-1">
+                                {% if purchase_order_list_form.can_delete %}
+                                <div class="custom-control custom-checkbox">
+                                    {{form.DELETE|add_class:"custom-control-input"}}
+                                    <i class="fa fa-trash text-danger fa-lg" style="margin: 0px !important;"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                         <div>
+                             <h4 id="sum" style="float: right; margin: 0px 100px 0px 0px; font-weight: 900;">
+                             </h4>
+                         </div>
+                         <br>
+                        <br>
+                        <div class="form-group mt-50" style="display: inline;">
+                            {{grn_form.published|add_class:""}}
+                            <label for="" style="display: inline;">Publish</label>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i
+                                class="fa fa-check"></i>Update</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+
+    </div>
+
+</div>
+
+<script>
+    function add_purchase_order_list() {
+        var particulars_index = parseInt($("#id_grn_list-TOTAL_FORMS").val())
+
+        console.log(particulars_index)
+        var particular_field = `
+        <div class="col-md-4">
+            <input type="text" name="grn_list-${particulars_index}-description" maxlength="256" placeholder="Description" class="form-control" id="id_grn_list-${particulars_index}-description">
+        </div>
+        <div class="col-md-1">
+            <input type="text" name="grn_list-${particulars_index}-unit" maxlength="100" placeholder="Unit" class="form-control" id="id_grn_list-${particulars_index}-unit">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="grn_list-${particulars_index}-quantity" placeholder="Quantity" class="form-control" id="id_grn_list-${particulars_index}-quantity">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="grn_list-${particulars_index}-price" step="0.01" placeholder="Price" class="form-control" id="id_grn_list-${particulars_index}-price">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="grn_list-${particulars_index}-total" step="0.01" placeholder="Total" class="form-control" id="id_grn_list-${particulars_index}-total">
+        </div>
+        <div class="col-md-1">
+            
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" name="grn_list-${particulars_index}-DELETE" class="custom-control-input" id="id_grn_list-${particulars_index}-DELETE">
+                <i class="fa fa-trash text-danger fa-lg" style="margin: 0px !important;"></i>
+            </div>
+            
+        </div>
+        `
+        $('#purchase-order-list-form').append(particular_field)
+
+
+        $("#id_grn_list-TOTAL_FORMS").val(particulars_index + 1);
+
+    }
+
+    function local_purchase_order_list_sum() {
+        var sum = 0;
+        var total_forms = parseInt($("#id_grn_list-TOTAL_FORMS").val())
+        for (var i = 0; i < total_forms; i++) {
+            var quantity = parseInt($(`#id_grn_list-${i}-quantity`).val());
+            var
+                price = parseInt($(`#id_grn_list-${i}-price`).val());
+            var total = quantity * price;
+            if (isNaN(total) == false) {
+                $(`#id_grn_list-${i}-total`).val(total);
+                sum = sum + total;
+            }
+        }
+        $(`#sum`).text(`Total: ${sum}/=`);
+    }
+</script>
+
+{% endblock %}

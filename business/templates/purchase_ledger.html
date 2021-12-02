@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Purchase Ledger
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:inventory' id=business.id %}">Inventory</a></li>
+<li>Purchase Ledger List</li>
+{% endblock%}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h5>Purchase Ledger List</h5>
+                    </div>
+                </div>
+                <div class="panel-body p-20 table-responsive">
+
+                    <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Supplier</th>
+                                <th>Invoice No.</th>
+                                <th>Order No.</th>
+                                <th>Delivery</th>
+                                <th>Prepared By</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Supplier</th>
+                                <th>Invoice No.</th>
+                                <th>Order No.</th>
+                                <th>Delivery</th>
+                                <th>Prepared By</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for ledger in ledgers %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{ledger.supplier}}</td>
+                                <td>{{ledger.invoice_no}}</td>
+                                <td>{{ledger.order_no}}</td>
+                                <td>{{ledger.delivery}}</td>
+                                <td>{{ledger.employee.user_employee.full_name}} ({{ledger.employee.user_employee.position}})
+                                </td>
+                                <td>{{ledger.amount}} TZS</td>
+                                <td>{{ledger.status}}</td>
+                                <td>{{ledger.created_at.date}}</td>
+                                <td>
+                                    <!-- <a href="{% url 'business:view_goods_received_note' id=ledger.id %}"
+                                        class="btn btn-info">
+                                        <i class="fa fa-eye" style="margin: 0px !important;"></i>
+                                    </a> -->
+
+                                    {% if ledger.status == 'Awaiting Payment' %}
+                                    <a href="{% url 'business:edit_purchase_ledger' id=ledger.id %}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fa fa-edit" style="margin: 0px !important;"></i>
+                                    </a>
+                                    {% endif %}
+
+                                    {% if ledger.published %}
+                                    <!-- <a href="{% url 'business:local_purchase_order_export_pdf' id=ledger.id %}"
+                                        class="btn btn-sm btn-success" target="_blank">
+                                        <span class="btn-label btn-label-left"><i class="fa fa-print"
+                                                style="margin: 0px !important;"></i></span>
+                                    </a> -->
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                    No Purchase Ledger records
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!--Sample display-->
+                    <div id="display">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-md-6 -->
+
+    </div>
+    {% if request.user.user_employee.position == 'Procurement Manager' or request.user.user_employee.position == 'Procurement Officer' or user.is_staff %}
+    <div class="fab" id="masterfab" data-toggle="modal" data-target="#expenseModal"> <a
+            href="{% url 'business:add_purchase_ledger' id=business.id %}"><span>+</span></a></div>
+
+    {% endif %}
+</div>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+
+<script>
+    $(function ($) {
+        $('#example').DataTable();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %} Expense Edit{% endblock %}
+
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:expense-list' id=business.id %}">Expense List</a></li>
+<li>Expense edit</li>
+{% endblock%}
+
+
+{% block content %}
+<style type="text/css">
+label[id*='category']::after 
+{
+  content: "*"; 
+  color:red;
+} 
+
+</style>
+
+
+<div class="container-fluid">
+
+ <div class="row">   
+<div class="col-md-8 col-md-offset-2">
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <h5>Expenses</h5>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <form class="" method="POST" action="">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="name2">Expense Name</label>
+                {{exp_form.name|add_class:"form-control"}}
+              </div>
+              <div class="form-group">
+                <label for="name2">Bank</label>
+                {{exp_form.bank|add_class:"form-control"}}
+              </div> 
+              <div class="form-group">
+                <label for="name2">Bank Account</label>
+                {{exp_form.account|add_class:"form-control"}}
+              </div>                              
+              <div class="form-group">
+                <label for="name2">Details</label>
+                {{exp_form.details|add_class:"form-control"}}
+              </div>
+
+              <div class="form-group">
+                <label id="category" id="category">Category</label>
+                {{exp_form.category|add_class:"form-control"}}
+              </div>
+              <div class="form-group">
+                <label for="name2">Date</label>
+                {{exp_form.date|add_class:"form-control"|attr:"type:date"}}
+              </div>
+              <div class="form-group">
+                <label for="name2">Cost</label>
+                {{exp_form.cost|add_class:"form-control"}}
+              </div>
+              <button type="submit" class="btn btn-success btn-rounded btn-wide pull-right"><i
+                  class="fa fa-check"></i>Submit</button>
+            </form>                                                     
+
+            <!-- /.col-md-12 -->
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!-- Ajax Request -->
+  <script>
+    $("#id_bank").change(function () {
+      var bank = $(this).val();
+      console.log(bank)
+      console.log("Hello")
+      $.ajax({
+        url: '{% url "business:expense-list" id=business.id %}',
+        data: {
+          'bank': bank
+        },
+        dataType: 'json',
+        success: function (data) {
+          // initialize the Selectize control
+          var $select = $('#id_account').selectize();
+
+          // fetch the instance
+          var selectize = $select[0].selectize;
+            selectize.clearOptions() 
+            selectize.refreshOptions()
+          
+          if(data){
+            var accounts = []
+
+
+            for (var x=0; x<data.length; x++){
+              accounts.push(data[x].fields.account_no)
+
+            }
+            
+            if(accounts.length > 1){
+            selectize.clearOptions() 
+                
+              for (var x=0; x<accounts.length; x++){
+              selectize.addOption({value:accounts[x], text:accounts[x]})
+              selectize.refreshOptions()
+
+              }              
+            }
+            else
+            {
+            selectize.clearOptions() 
+                
+              selectize.addOption({value:accounts, text:accounts})
+              selectize.refreshOptions()
+
+            }
+
+          }
+
+          selectize.refreshOptions()
+          console.log(accounts)
+        }
+      });
+
+    });
+
+
+
+  </script>
+
+{% endblock %}

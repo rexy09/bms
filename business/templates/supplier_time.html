@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Supplier
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:business_profile' id=business.id %}">{{business.name}}</a></li>
+<li><a href="{% url 'business:reports' id=business.id %}">Reports</a></li>
+<li>Supplier</li>
+{% endblock%}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+
+			<div class="panel">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<h5>Suppliers</h5>
+					</div>
+				</div>
+				<div class="panel-body p-20">
+					<form class="" action="{% url 'business:supplier_report' id=business.id %}" method="GET">
+						<div class="form-group">
+							<label for="exampleFormControlSelect1">Select Supplier</label>
+							<select class="form-control" id="exampleFormControlSelect1" name="p" required>
+								<option value="0">All</option>
+								{% for supplier in suppliers %}
+								<option value="{{supplier.id}}">{{supplier.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<label class="">From</label>
+						<input type="date" class="form-control mb-2 mr-sm-2" id="" placeholder="Date" name="fr"
+							required>
+						<label class="">To</label>
+						<input type="date" class="form-control mb-2 mr-sm-2" id="" placeholder="Date" name="to"
+							required>
+						<button type="submit" class="btn btn-primary mb-2">Search</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+		<!-- /.col-md-6 -->
+
+	</div>
+
+</div>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+
+<script>
+	$(function ($) {
+		$('#example').DataTable();
+	});
+</script>
+{% endblock %}

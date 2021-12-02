@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Income Statement
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'business:financial_statements' %}">Financial Statements</a></li>
+<li>Time Frame</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+
+			<div class="panel">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<h5>Choose Time Frame</h5>
+					</div>
+				</div>
+				<div class="panel-body p-20">
+					<div id="" class="list-group">
+						<a class="list-group-item" href="{% url 'business:income_statement' d=1 %}">Current Month</a>
+						<a class="list-group-item"
+							href="{% url 'business:income_statement' d=2 %}">Previus Month</a>
+						<a class="list-group-item" href="{% url 'business:income_statement' d=3 %}">Grand</a>
+					</div>
+					<hr>
+					<form class="" action="{% url 'business:income_statement' d=4 %}" method="GET">
+						<label class="">From</label>
+						<input type="date" min="2000"  class="form-control mb-2 mr-sm-2" id="" placeholder="Year" name="fr" required>
+						<label class="">To</label>
+						<input type="date" min="2000"  class="form-control mb-2 mr-sm-2" id="" placeholder="Year" name="to" required>
+						<button type="submit" class="btn btn-primary mb-2">Search</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+		<!-- /.col-md-6 -->
+
+	</div>
+
+</div>
+{% endblock %}

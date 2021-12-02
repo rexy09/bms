@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Bank edit
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'administration:administrator' %}">Administrator</a></li>
+<li><a href="{% url 'administration:bank-list' %}">Bank List</a></li>
+<li>Bank Edit</li>
+{% endblock%}
+
+{% block content %}
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-success" href="{% url 'administration:bank-edit' id=bank.id %}">
+                <span class="number counter"></span>
+                <span class="name">Bank branch edit</span>
+                <span class="bg-icon"><i class="fa fa-building" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>
+
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a class="dashboard-stat bg-info" href="{% url 'administration:account-edit' id=bank.id %}">
+                <span class="number counter"></span>
+                <span class="name">Bank Account edit</span>
+                <span class="bg-icon"><i class="fa fa-money" style="padding: 12px;"></i></span>
+            </a>
+            <!-- /.dashboard-stat -->
+        </div>
+        <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
+
+    </div>
+
+
+
+</div>
+{% endblock %}
